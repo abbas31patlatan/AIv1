@@ -11,4 +11,8 @@ class ActionScheduler(Scheduler):
     def schedule_action(
         self, name: str, interval: int, coro_func: Callable[[], Awaitable[Any]]
     ) -> None:
-        super().schedule(interval, coro_func)
+        super().schedule(interval, coro_func, name=name)
+
+    def cancel_action(self, name: str) -> None:
+        """Cancel a scheduled action."""
+        self.cancel(name)
