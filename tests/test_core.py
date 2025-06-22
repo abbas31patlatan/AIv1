@@ -21,4 +21,3 @@ def test_scheduler_cancel():
         assert "t" not in s._tasks
 
     asyncio.run(runner())
-

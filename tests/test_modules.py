@@ -13,4 +13,3 @@ def test_offline_toggle():
     assert o.active
     o.force(False)
     assert isinstance(o.active, bool)
-

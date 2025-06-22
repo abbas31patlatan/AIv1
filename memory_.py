@@ -89,3 +89,4 @@ class Memory:
         """Iterate over stored entry texts in insertion order."""
         for entry_id in sorted(self._entries):
             yield self._entries[entry_id].text
+
