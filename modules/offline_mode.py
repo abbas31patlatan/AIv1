@@ -19,6 +19,10 @@ class OfflineMode:
         """Manually toggle offline mode."""
         self._forced = value
 
+    def toggle(self) -> None:
+        """Invert the forced offline state."""
+        self._forced = not self._forced
+
 
 _INSTANCE = OfflineMode()
 
