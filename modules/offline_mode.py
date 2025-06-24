@@ -1,10 +1,7 @@
 """Determine whether the application should operate in offline mode."""
 from __future__ import annotations
 
-import os
-
 from utils.internet_checker import connected
-
 
 class OfflineMode:
     """Simple helper that exposes the current offline status."""
@@ -15,18 +12,18 @@ class OfflineMode:
     @property
     def active(self) -> bool:
         """Return ``True`` when the system is offline."""
-        env_override = os.getenv("APP_OFFLINE")
-        if env_override is not None:
-            return env_override == "1"
         return self._forced or not connected()
 
     def force(self, value: bool) -> None:
-        """Manually toggle offline mode."""
+        """Manually toggle offline mode (True/False)."""
         self._forced = value
 
+    def toggle(self) -> None:
+        """Invert the forced offline state."""
+        self._forced = not self._forced
 
+# Singleton instance (global erişim için)
 _INSTANCE = OfflineMode()
-
 
 def available() -> bool:
     """Backward compatible check for offline availability."""

@@ -8,14 +8,12 @@ modules show how a dialogue pipeline could be composed from small, testable
 building blocks. The system also demonstrates loading modern `gguf` language
 models via the optional ``llama_cpp`` wrapper.
 
+The GUI has also been fleshed out with a minimal configuration menu.  Users can
+toggle voice feedback, switch between one of the predefined themes and enable or
+disable offline mode.  Preferences are persisted across runs in
+``gui_prefs.json`` within the configured data directory.
+
 ## Quick Start
 
 ```bash
 python main.py
-```
-
-## Running Tests
-
-```bash
-pytest -q
-```

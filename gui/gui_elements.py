@@ -22,4 +22,3 @@ def entry(parent: tk.Widget) -> tk.Entry:
     ent = tk.Entry(parent)
     ent.pack(padx=5, pady=5, fill=tk.X)
     return ent
-
