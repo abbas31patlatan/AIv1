@@ -39,7 +39,6 @@ SYNONYMS: dict[str, list[str]] = {
     "car": ["automobile", "vehicle"],
 }
 
-
 @dataclass
 class MemoryEntry:
     """Represents a single memory record."""
@@ -49,7 +48,6 @@ class MemoryEntry:
 
     def __post_init__(self) -> None:
         self.tokens = Counter(self.text.lower().split())
-
 
 class Memory:
     """Container for stored memory entries with optional autosave.
@@ -134,7 +132,6 @@ class Memory:
 
     def search_synonyms(self, query: str, limit: int = 3) -> List[Tuple[int, float]]:
         """Search *query* expanding tokens with :data:`SYNONYMS`."""
-
         expanded = set(query.lower().split())
         for token in list(expanded):
             expanded.update(SYNONYMS.get(token, []))
@@ -148,7 +145,6 @@ class Memory:
 
     def find_similar(self, text: str, cutoff: float = 0.6) -> List[int]:
         """Return ids of entries whose raw text is similar to ``text``."""
-
         result = []
         for eid, entry in self._entries.items():
             ratio = SequenceMatcher(None, text.lower(), entry.text.lower()).ratio()
@@ -158,7 +154,6 @@ class Memory:
 
     def remove_matching(self, pattern: str) -> int:
         """Remove all entries matching *pattern* and return the count."""
-
         import re
 
         regex = re.compile(pattern)
@@ -171,7 +166,6 @@ class Memory:
 
     def summarise(self, word_limit: int = 30) -> str:
         """Return a naive concatenated summary of stored entries."""
-
         pieces = []
         for entry in self._entries.values():
             words = entry.text.split()
@@ -201,3 +195,4 @@ class Memory:
         """Persist memory if autosave is enabled."""
         if self._autosave:
             self.save(self._autosave)
+

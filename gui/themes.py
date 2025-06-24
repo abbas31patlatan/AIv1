@@ -9,13 +9,14 @@ from __future__ import annotations
 from typing import Dict
 import tkinter as tk
 
-# Mapping of theme names to configuration dictionaries
+# Genişletilmiş tema listesi
 THEMES: Dict[str, Dict[str, str]] = {
-    "light": {"bg": "#ffffff", "fg": "#000000"},
-    "dark": {"bg": "#222222", "fg": "#eeeeee"},
-    "solar": {"bg": "#fdf6e3", "fg": "#586e75"},
+    "light": {"bg": "#ffffff", "fg": "#000000", "highlight": "#d3d3d3"},
+    "dark": {"bg": "#222222", "fg": "#eeeeee", "highlight": "#555555"},
+    "solar": {"bg": "#fdf6e3", "fg": "#586e75", "highlight": "#b58900"},
+    "blue": {"bg": "#eaf6fb", "fg": "#104e8b", "highlight": "#cfe2f3"},
+    "pink": {"bg": "#fde8f0", "fg": "#822659", "highlight": "#ffcfe2"},
 }
-
 
 def apply_theme(root: tk.Tk, name: str) -> None:
     """Apply the theme *name* to *root* if available."""
@@ -26,5 +27,10 @@ def apply_theme(root: tk.Tk, name: str) -> None:
             widget.configure(bg=theme["bg"], fg=theme["fg"])
         except tk.TclError:
             # Not all widgets support both options
-            widget.configure(bg=theme["bg"])
+            try:
+                widget.configure(bg=theme["bg"])
+            except Exception:
+                pass
 
+# Tema isimleri dışarıdan erişilsin diye
+themes = THEMES

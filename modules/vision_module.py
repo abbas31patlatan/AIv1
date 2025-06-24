@@ -1,41 +1,85 @@
-"""Very small vision module with dummy detection and captioning."""
-from __future__ import annotations
+"""Gelişmiş vision (görsel işleme) modülü.
 
+- Basit etiket ve dosya adından detection
+- PIL/Pillow ile gerçek görüntü boyutu, renk ve basit öznitelik analizi
+- Basit caption üretimi
+- Kolayca yeni model/algoritma entegre edilebilir
+"""
+
+from __future__ import annotations
 import os
 
-try:  # pragma: no cover - optional dependency
+try:
     from PIL import Image
-except Exception:  # pragma: no cover - missing pkg
+except ImportError:
     Image = None
 
-
 _KEYWORDS = {
-    "cat": ["cat"],
-    "dog": ["dog"],
+    "cat": ["cat", "kedi", "ked"],
+    "dog": ["dog", "köpek"],
+    "car": ["car", "araba", "oto"],
+    "person": ["person", "insan"],
 }
 
-
 def detect_objects(image_path: str) -> list[str]:
-    """Return a list of detected object labels in ``image_path``."""
+    """Akıllı dosya adı ve görsel üzerinden nesne etiketi bulur."""
+    labels = []
     name = os.path.basename(image_path).lower()
-    for key, labels in _KEYWORDS.items():
-        if key in name:
-            return labels
-    # fall back to simple check on image size
+    for key, aliases in _KEYWORDS.items():
+        if any(alias in name for alias in aliases):
+            labels.append(key)
+    # Eğer PIL varsa, görsel analizi ile ekstra tag
     if Image:
         try:
-            with Image.open(image_path) as img:  # pragma: no cover - file access
+            with Image.open(image_path) as img:
                 w, h = img.size
-            if w > 100 and h > 100:
-                return ["large-object"]
+                if w > 300 and h > 300:
+                    labels.append("large-object")
+                # Ortalama renk analizi
+                avg = tuple([int(x) for x in img.resize((1,1)).getpixel((0,0))])
+                if avg[0] > 200 and avg[1] > 200 and avg[2] > 200:
+                    labels.append("mostly-white")
+                elif avg[0] < 60 and avg[1] < 60 and avg[2] < 60:
+                    labels.append("mostly-dark")
         except Exception:
             pass
-    return []
-
+    return labels or ["unknown"]
 
 def caption_image(image_path: str) -> str:
-    """Generate a very naive caption for ``image_path``."""
+    """Görüntüyü özetleyen akıllı bir caption üretir."""
     labels = detect_objects(image_path)
-    if labels:
+    if not labels or labels == ["unknown"]:
+        return "No recognizable objects detected."
+    if "person" in labels:
+        return "Image contains a person."
+    if "cat" in labels or "dog" in labels:
         return f"Image contains a {labels[0]}"
-    return "No objects detected"
+    if "large-object" in labels:
+        return "Image shows a large object."
+    if "mostly-white" in labels:
+        return "Image is mostly white/bright."
+    if "mostly-dark" in labels:
+        return "Image is mostly dark."
+    return f"Image contains: {', '.join(labels)}"
+
+def image_histogram(image_path: str) -> dict:
+    """RGB histogram döndürür (PIL varsa)."""
+    if not Image:
+        return {}
+    try:
+        with Image.open(image_path) as img:
+            h = img.histogram()
+            return {
+                "red": sum(h[0:256]),
+                "green": sum(h[256:512]),
+                "blue": sum(h[512:768]),
+            }
+    except Exception:
+        return {}
+
+# Test & örnek
+if __name__ == "__main__":
+    path = "test_cat.jpg"
+    print("Detected:", detect_objects(path))
+    print("Caption:", caption_image(path))
+    print("Histogram:", image_histogram(path))
