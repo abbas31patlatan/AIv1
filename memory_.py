@@ -22,7 +22,6 @@ from collections import Counter
 from dataclasses import dataclass, field
 from typing import Dict, List, Tuple
 
-
 @dataclass
 class MemoryEntry:
     """Represents a single memory record."""
@@ -89,4 +88,3 @@ class Memory:
         """Iterate over stored entry texts in insertion order."""
         for entry_id in sorted(self._entries):
             yield self._entries[entry_id].text
-

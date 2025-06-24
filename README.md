@@ -17,10 +17,3 @@ disable offline mode.  Preferences are persisted across runs in
 
 ```bash
 python main.py
-```
-
-## Running Tests
-
-```bash
-pytest -q
-```
