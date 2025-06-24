@@ -8,7 +8,7 @@
 """
 
 from __future__ import annotations
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 from datetime import datetime
 import json
@@ -114,4 +114,3 @@ if __name__ == "__main__":
     print(summary())
     print(list_tasks())
     export_tasks("tasks.json")
-

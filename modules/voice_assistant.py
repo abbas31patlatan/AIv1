@@ -131,9 +131,12 @@ def listen(
         pyperclip.copy(text)
 
     if auto_lang_detect:
-        import langdetect
-        detected = langdetect.detect(text)
-        print(f"Algılanan dil: {detected}")
+        try:
+            import langdetect
+            detected = langdetect.detect(text)
+            print(f"Algılanan dil: {detected}")
+        except Exception:
+            pass
 
     return text
 
@@ -150,4 +153,3 @@ if __name__ == "__main__":
     text = listen(lang="tr", clipboard=True)
     print("Algılanan:", text)
     speak_clipboard(lang="tr")
-

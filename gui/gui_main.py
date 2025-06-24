@@ -2,14 +2,14 @@
 from __future__ import annotations
 
 import tkinter as tk
-from tkinter import messagebox, ttk, filedialog, colorchooser, simpledialog
+from tkinter import messagebox, filedialog, colorchooser
 
 from config.gui_preferences import prefs
 from modules.voice_assistant import speak
 from .gui_elements import button, entry, label
 from .themes import apply_theme, THEMES
 
-# EKLENEN YENİ FONKSİYONLAR
+# --- EKSTRA FONKSİYONLAR ---
 def save_history(messages):
     filename = filedialog.asksaveasfilename(defaultextension=".txt")
     if filename:
@@ -38,6 +38,26 @@ def edit_theme(app):
             except Exception:
                 pass
 
+class DummyRoot:
+    """Minimal stand-in for :class:`tkinter.Tk` in headless environments."""
+    def __init__(self) -> None:
+        self._config: dict[str, str] = {}
+        self._title = "AIv1"
+    def configure(self, **opts: str) -> None:
+        self._config.update(opts)
+    def cget(self, key: str) -> str:
+        return self._config.get(key, "")
+    def winfo_children(self):
+        return []
+    def title(self, value: str | None = None) -> str:
+        if value is not None:
+            self._title = value
+        return self._title
+    def destroy(self) -> None:
+        pass
+    def mainloop(self) -> None:
+        pass
+
 class AppGUI:
     """Gelişmiş, profesyonel, çok özellikli, modern görünümlü AIv1 GUI."""
 
@@ -46,8 +66,7 @@ class AppGUI:
             self.root = tk.Tk()
             self._headless = False
         except tk.TclError:
-            from types import SimpleNamespace
-            self.root = SimpleNamespace()
+            self.root = DummyRoot()
             self._headless = True
 
         self.root.title("AIv1 - Akıllı Yardımcı")
@@ -62,14 +81,12 @@ class AppGUI:
     def create_menu(self):
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
-
         # Dosya
         file_menu = tk.Menu(menubar, tearoff=0)
         file_menu.add_command(label="Geçmişi Kaydet", command=lambda: save_history(self.messages))
         file_menu.add_separator()
         file_menu.add_command(label="Çıkış", command=self.root.quit)
         menubar.add_cascade(label="Dosya", menu=file_menu)
-
         # Ayarlar
         settings_menu = tk.Menu(menubar, tearoff=0)
         settings_menu.add_command(label="Tema Düzenle", command=lambda: edit_theme(self))
@@ -78,7 +95,6 @@ class AppGUI:
         settings_menu.add_command(label="Ses Aç/Kapat", command=self.toggle_voice)
         settings_menu.add_command(label="Offline Mod", command=self.toggle_offline)
         menubar.add_cascade(label="Ayarlar", menu=settings_menu)
-
         # Hakkında
         about_menu = tk.Menu(menubar, tearoff=0)
         about_menu.add_command(label="Hakkında", command=lambda: messagebox.showinfo(

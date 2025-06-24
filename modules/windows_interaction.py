@@ -68,6 +68,14 @@ def set_state(title: str, state: str) -> bool:
     win.state = state
     return True
 
+def rename_window(old_title: str, new_title: str) -> bool:
+    """Pencerenin başlığını değiştir."""
+    if old_title not in _OPEN_WINDOWS: return False
+    win = _OPEN_WINDOWS.pop(old_title)
+    win.title = new_title
+    _OPEN_WINDOWS[new_title] = win
+    return True
+
 def list_windows(only_open: bool = True) -> List[str]:
     """Açık tüm pencerelerin başlıklarını döndür."""
     return [w.title for w in _OPEN_WINDOWS.values() if w.is_open or not only_open]
@@ -90,5 +98,7 @@ if __name__ == "__main__":
     focus_window("Dosya Yöneticisi")
     set_state("Editor", "minimized")
     print(get_window_info("Editor"))
-    close_window("Editor")
+    rename_window("Editor", "Kod Editörü")
+    print(list_windows())
+    close_window("Kod Editörü")
     print(list_windows())

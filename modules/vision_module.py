@@ -62,7 +62,6 @@ def caption_image(image_path: str) -> str:
         return "Image is mostly dark."
     return f"Image contains: {', '.join(labels)}"
 
-# Ekstra: basit histogram analizi örneği
 def image_histogram(image_path: str) -> dict:
     """RGB histogram döndürür (PIL varsa)."""
     if not Image:

@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import Dict
 import tkinter as tk
 
-# Mapping of theme names to configuration dictionaries
+# Genişletilmiş tema listesi
 THEMES: Dict[str, Dict[str, str]] = {
     "light": {"bg": "#ffffff", "fg": "#000000", "highlight": "#d3d3d3"},
     "dark": {"bg": "#222222", "fg": "#eeeeee", "highlight": "#555555"},
@@ -32,5 +32,5 @@ def apply_theme(root: tk.Tk, name: str) -> None:
             except Exception:
                 pass
 
-# Eğer dışarıdan temalar da okunacaksa burada "themes" dict'ini de dışa aktarabilirsin:
+# Tema isimleri dışarıdan erişilsin diye
 themes = THEMES
